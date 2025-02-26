@@ -1,0 +1,14 @@
+Running Test
+> Clowns & Jokers
+
+Commands:
+
+:help             -- print this
+:quit             -- Exit programme
+:start            -- Start a game
+:stop             -- Stop a running game
+:move [x] [y] [d] -- move a piece at position (x,y) in direction `d`
+                     where
+                       x,y is a number  between 0 and 4
+                       d is one of: left, right, up, down
+> 

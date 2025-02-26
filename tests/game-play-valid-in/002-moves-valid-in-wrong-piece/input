@@ -1,0 +1,8 @@
+:help
+:start
+:move 1 4 up
+:move 1 0 down
+:move 3 0 down
+:move 1 4 left
+:stop
+:quit
