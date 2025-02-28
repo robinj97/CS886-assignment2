@@ -83,4 +83,12 @@ renderBoard board =
             (if rowIdx < 4 then "\n"
             else "") ++ renderRows (S rowIdx) board
 
+export
+isValidDirection : String -> Bool
+isValidDirection "left" = True
+isValidDirection "right" = True
+isValidDirection "up" = True
+isValidDirection "down" = True
+isValidDirection _ = False
+
 -- [ EOF ]

@@ -20,6 +20,15 @@ helpStr = "Clowns & Jokers\n\nCommands:\n\n"
        ++ "                       d is one of: left, right, up, down"
 
 export
+makeMove : State -> Nat -> Nat -> String -> Maybe State
+makeMove st x y direction =
+  if not (inGame st)
+  then Nothing
+  else if x >= 5 || y >= 5
+  then Nothing
+  else Just st
+
+export
 process : (st  : State)
        -> (str : String)
               -> Maybe (String, State)
@@ -45,6 +54,12 @@ process st str with (Command.fromString str)
     = if inGame st
       then Just ("Stopping Game\n", resetState st)
       else Just ("Game has not started yet.", st)
+
+  process st str | (Just (Move x y direction))
+    = case makeMove st x y direction of
+        Nothing => Just ("Invalid move!", st)
+        Just newState => Just ("Piece moved!", newState)
+
 export
 main : IO ()
 main
