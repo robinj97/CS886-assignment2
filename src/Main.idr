@@ -9,7 +9,15 @@ import Command
 
 
 helpStr : String
-helpStr = "Help Me!"
+helpStr = "Clowns & Jokers\n\nCommands:\n\n"
+       ++ ":help             -- print this\n"
+       ++ ":quit             -- Exit programme\n"
+       ++ ":start            -- Start a game\n"
+       ++ ":stop             -- Stop a running game\n"
+       ++ ":move [x] [y] [d] -- move a piece at position (x,y) in direction `d`\n"
+       ++ "                     where\n"
+       ++ "                       x,y is a number  between 0 and 4\n"
+       ++ "                       d is one of: left, right, up, down"
 
 export
 process : (st  : State)
