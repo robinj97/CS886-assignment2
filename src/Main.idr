@@ -35,6 +35,16 @@ process st str with (Command.fromString str)
   process st str | (Just Help)
     = Just ("\{helpStr}\n", st)
 
+  process st str | (Just Start)
+  = if inGame st
+    then Just ("Game has already started and is ongoing.",st)
+    else
+      let startedState = startGame st in
+        Just ("Starting Game\n\n\{renderBoard (board startedState)}\n\n\{show (currentPlayer startedState)}", startedState)
+  process st str | (Just Stop)
+    = if inGame st
+      then Just ("Stopping Game\n", resetState st)
+      else Just ("Game has not started yet.", st)
 export
 main : IO ()
 main

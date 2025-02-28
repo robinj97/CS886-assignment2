@@ -13,6 +13,8 @@ You will need to add your commands here
 public export
 data CMD = Quit
          | Help
+         | Start
+         | Stop
 
 
 
@@ -28,6 +30,10 @@ fromString str with (words str)
         = Just Help
       fromString str | [cmd] | (Yes Null) | ":quit"
         = Just Quit
+      fromString str | [cmd] | (Yes Null) | ":start"
+        = Just Start
+      fromString str | [cmd] | (Yes Null) | ":stop"
+        = Just Stop
       fromString str | [cmd] | (Yes Null) | rest
         = Nothing
 
