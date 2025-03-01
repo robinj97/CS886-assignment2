@@ -62,6 +62,8 @@ makeMove st x y direction =
                                         Nothing => GameOn
                                         Just _ => GameOff
                           newState = St gameState newBoard nextPlayer
+                          -- Create a move description message
+                          moveMsg = "Moved (" ++ show x ++ ", " ++ show y ++ ") to (" ++ show newX ++ ", " ++ show newY ++ ")"
                       in
                         case winner of
                           Just winningPlayer =>
@@ -70,7 +72,7 @@ makeMove st x y direction =
                                            P2 => "Player 2 Wins"
                             in Just (winMsg, newState)
                           Nothing =>
-                            Just ("Move successful", newState)
+                            Just (moveMsg, newState)
                   else
                     -- Give more specific error for invalid attacks
                     case (piece, retrievedPiece) of
@@ -84,7 +86,7 @@ process : (st  : State)
               -> Maybe (String, State)
 process st str with (Command.fromString str)
   process st str | Nothing
-    = Just ("Invalid command\n", st)
+    = Just ("Invalid Command.\n", st)
 
   process st str | (Just Quit)
     = if inGame st
@@ -95,7 +97,7 @@ process st str with (Command.fromString str)
 
   process st str | (Just Start)
   = if inGame st
-    then Just ("Game has already started and is ongoing.\n",st)
+    then Just ("Game has already started and is ongoing.\n", st)
     else
       let startedState = startGame st in
         Just ("Starting Game\n\n\{renderBoard (board startedState)}\n\n\{show (currentPlayer startedState)}", startedState)
@@ -108,18 +110,22 @@ process st str with (Command.fromString str)
   = case makeMove st x y direction of
       Nothing => Just ("Invalid Move\n", st)
       Just (message, newState) =>
-        if message == "Move successful"
-        then Just ("Move successful\n\n\{renderBoard (board newState)}\n\n\{show (currentPlayer newState)}", newState)
+        if isPrefixOf "Moved" message
+        then
+          -- Include the next player indicator as part of the output
+          let nextPlayerPrefix = show (currentPlayer newState)
+          in Just ("\{renderBoard (board newState)}\n\n\{message}\n\{nextPlayerPrefix}", newState)
         else if message == "Player 1 Wins" || message == "Player 2 Wins"
-        then Just ("\{renderBoard (board newState)}\n\n\{message}\n", newState)
+        then
+          -- For win messages, display the board first, then the win message
+          Just ("\{renderBoard (board newState)}\n\n\{message}\n", newState)
         else
-          -- Keep the current player in the prompt even when displaying error messages
+          -- For error messages, add a newline and the current player
           Just (message ++ "\n\{show (currentPlayer st)}", st)
 
 export
 main : IO ()
-main
-  = replWith defaultState "> " process
+main = replWith defaultState "> " process
 
 
 -- [ EOF ]
